@@ -42,7 +42,8 @@ class SolverILSA(object):
 
             fracture_new, error, total_iter = self._solve_timestep(current_time, fracture_old)
             fracture_old = copy.deepcopy(fracture_new)
-
+            import time
+            time.sleep(0.08)
             # Call notify here
             results_json = self.fracture_to_json(fracture_old)
             self.notifier(results_json)
