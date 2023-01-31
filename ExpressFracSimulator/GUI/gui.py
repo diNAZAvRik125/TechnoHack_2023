@@ -19,12 +19,6 @@ from ProjectData import ProjectData
 from CalculationWorker import CalculationWorker
 
 import sys,os
-# import PySide2
-
-# dirname = os.path.dirname(PySide2.__file__)
-# plugin_path = os.path.join(dirname, 'plugins', 'platforms')
-# os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path
-
 
 class MainWindow(QMainWindow):
     calculation_requested = Signal(dict)
@@ -35,7 +29,7 @@ class MainWindow(QMainWindow):
         # Window title
         self.setWindowTitle("ExpressFrac Simulator")
 
-        self.project_data = ProjectData()
+        self.project_data = ProjectData()#мини база данных хранит результаты полученные от solvera
 
         # Main window layout
         page_layout = QHBoxLayout()
