@@ -3,6 +3,7 @@ import time
 import sys
 
 
+
 class MathModel(object):
     def __init__(self, input_data, notifier=None):
         self.input_data = input_data

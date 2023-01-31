@@ -1,7 +1,7 @@
 import sys
 import copy
 from PySide6.QtCore import QObject, Signal
-from mathematical_model import MathModel
+from ExpressFrac.Runner import Runner
 
 
 class CalculationWorker(QObject):
@@ -15,8 +15,8 @@ class CalculationWorker(QObject):
     def run_simulation(self, input_data):
         sys.stdout.write("CalculationWorker: run simulation")
         # Start calculation and connect notifier
-        solver = MathModel(input_data, self._time_step_finished_notifier)
-        solver.super_long_time_loop()
+        solver = Runner(input_data, self._time_step_finished_notifier)
+        solver.solve()
 
         # Emit "completed" signal when calculation is finished
         sys.stdout.write("\nCalculationWorker: calculation completed")

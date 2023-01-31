@@ -13,10 +13,10 @@ from PySide6.QtWidgets import (
 
 import sys
 
-from Utils import EmittingStream
-from CustomWidgets import TimeSlider, InputDataWidget, PlotResultsWidget
-from ProjectData import ProjectData
-from CalculationWorker import CalculationWorker
+from GUI.Utils import EmittingStream
+from GUI.CustomWidgets import TimeSlider, InputDataWidget, PlotResultsWidget
+from GUI.ProjectData import ProjectData
+from GUI.CalculationWorker import CalculationWorker
 
 import sys,os
 
@@ -137,14 +137,14 @@ class MainWindow(QMainWindow):
     def calculation_results_obtained(self):
         # Get obtained data from worker
         self.project_data.append_result(self.calc_worker.results)
-        t = self.project_data.results_by_time[-1]["time"]
+        t = self.project_data.results_by_time[-1]["summary"]["time"]
         sys.stdout.write("GUI: Results obtained from worker. Time: {t}".format(t=t))
 
         # Update time slider and update plot
         self.time_slider.appendTime(t)
 
     def calculation_completed(self):
-        sys.stdout.write("GUI: Calculation completed. Final time: {t}".format(t=self.calc_worker.results["time"]))
+        sys.stdout.write("GUI: Calculation completed. Final time: {t}".format(t=self.calc_worker.results["summary"]["time"]))
 
         # Restore sys.stdout
         sys.stdout = sys.__stdout__

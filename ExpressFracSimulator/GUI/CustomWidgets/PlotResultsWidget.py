@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QSplitter
 )
-from CustomWidgets import MplWidget
+from . import MplWidget
 import numpy as np
 
 
@@ -42,8 +42,8 @@ class PlotResultsWidget(QWidget):
         self.setLayout(self.layout)
 
     def plot_results(self, results_data, time_index):
-        x = np.array(results_data[time_index]["x"])
-        width = np.array(results_data[time_index]["width"])
+        x = np.array(results_data[time_index]["mesh"]["xc"])
+        width = np.array(results_data[time_index]["results"]["effective_width"])
 
         # ------------------------------------------------------
         # 1D Plot

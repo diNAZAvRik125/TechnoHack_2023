@@ -1,6 +1,6 @@
 import copy
 from PySide6.QtCore import QObject, QLocale
-from CustomWidgets import InputDataWidget
+from GUI.CustomWidgets import InputDataWidget
 
 class ProjectData(QObject):
     def __init__(self):
@@ -41,8 +41,22 @@ class ProjectData(QObject):
                 "xmax": convert_locale.toDouble(
                     input_form_widget.mesh_prop_input[0].text().replace(",", ".")
                 )[0],
-                "nx": convert_locale.toDouble(
+                "nx": convert_locale.toInt(
                     input_form_widget.mesh_prop_input[1].text().replace(",", ".")
+                )[0]
+            },
+            "SolverSettings": {
+                "TimeStep": convert_locale.toDouble(
+                    input_form_widget.solver_settings_input[0].text().replace(",", ".")
+                )[0],
+                "FrontTolerance": convert_locale.toDouble(
+                    input_form_widget.solver_settings_input[1].text().replace(",", ".")
+                )[0],
+                "FrontMaxIter": convert_locale.toInt(
+                    input_form_widget.solver_settings_input[2].text().replace(",", ".")
+                )[0],
+                "FrontRelaxationCoeff": convert_locale.toDouble(
+                    input_form_widget.solver_settings_input[3].text().replace(",", ".")
                 )[0]
             }
         }
