@@ -75,7 +75,7 @@ class PlotResultsWidget(QWidget):
         # 1D Plot
         # ------------------------------------------------------
         if self._effective_width_plot_ref_2 is None:
-            self._effective_width_plot_ref_2 = self.effective_width_plot_2.canvas.ax.plot(y, fluid, 'r')[0]
+            self._effective_width_plot_ref_2 = self.effective_width_plot_2.canvas.ax.plot(y, fluid, 'g')[0]
         else:
             self._effective_width_plot_ref_2.set_xdata(y)
             self._effective_width_plot_ref_2.set_ydata(fluid)
@@ -92,4 +92,5 @@ class PlotResultsWidget(QWidget):
         if self._effective_width_plot_ref_2 is not None:
             self._effective_width_plot_ref_2.remove()
             self._effective_width_plot_ref_2 = None
-        self.effective_width_plot.canvas.draw()
+        self.effective_width_plot_1.canvas.draw()
+        self.effective_width_plot_2.canvas.draw()

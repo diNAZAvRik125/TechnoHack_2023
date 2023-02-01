@@ -148,7 +148,7 @@ class MainWindow(QMainWindow):
 
         # Restore sys.stdout
         sys.stdout = sys.__stdout__
-        sys.stdout.write("Print after sys.stdout restoring\n")
+        sys.stdout.write("Print fter sys.stdout restoring\n")
 
         # Stop worker thread
         self.calc_worker_thread.quit()
