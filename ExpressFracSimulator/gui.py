@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
 
     def update_plot_widget(self, time_index):
         if time_index >= 0:
-            self.plot_results_widget.plot_results(self.project_data.results_by_time, time_index)
+            self.plot_results_widget.plot_results(self.project_data, time_index)
         else:
             self.plot_results_widget.clear_plots()
 
