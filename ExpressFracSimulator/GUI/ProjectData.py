@@ -30,12 +30,8 @@ class ProjectData(QObject):
                 )[0]
             },
             "PumpingSchedule": {
-                "Duration": convert_locale.toDouble(
-                    input_form_widget.pumping_schedule_input[0].text().replace(",", ".")
-                )[0],
-                "Flowrate": convert_locale.toDouble(
-                    input_form_widget.pumping_schedule_input[1].text().replace(",", ".")
-                )[0]
+                "Schedule": [0, 300, 1000, 2000],
+                "Flowrate": [0.05, 0.06, 0.04],
             },
             "MeshProperties": {
                 "xmax": convert_locale.toDouble(

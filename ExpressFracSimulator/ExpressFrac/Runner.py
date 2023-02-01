@@ -41,7 +41,7 @@ class Runner(object):
             self.input_data["ReservoirProperties"]["LeakoffCoefficient"]
         )
         pumping_schedule = PumpingSchedule(
-            self.input_data["PumpingSchedule"]["Duration"],
+            self.input_data["PumpingSchedule"]["Schedule"],
             self.input_data["PumpingSchedule"]["Flowrate"],
             H
         )

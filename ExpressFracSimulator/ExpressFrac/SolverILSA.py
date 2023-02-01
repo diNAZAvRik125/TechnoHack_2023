@@ -23,7 +23,9 @@ class SolverILSA(object):
             self.mesh.xc, self.mesh.dx, self.reservoir_prop.pay_zone_height, is_symmetric=True
         ).kernel
         self.asymptotic = TipAsymptotic(self.reservoir_prop.e_prime, self.reservoir_prop.k_prime)
-        self.init_volume = 0
+        self.frac_volume = 0
+        self.inj_volume = 0
+        self.leak_volume = 0
 
         # Set solver settings
         self.max_iter = max_iter
@@ -33,7 +35,7 @@ class SolverILSA(object):
 
     def solve(self, init_fracture: Fracture, dt: float):
         fracture_old = copy.deepcopy(init_fracture)
-        self.init_volume = init_fracture.fracture_volume()
+        self.frac_volume = init_fracture.fracture_volume()
 
         current_time = 0
         while current_time < self.pumping_schedule.time_end:
@@ -43,7 +45,8 @@ class SolverILSA(object):
             fracture_new, error, total_iter = self._solve_timestep(current_time, fracture_old)
             fracture_old = copy.deepcopy(fracture_new)
             import time
-            time.sleep(0.175)
+            time.sleep(0.075)
+
             # Call notify here
             results_json = self.fracture_to_json(fracture_old)
             self.notifier(results_json)
@@ -52,8 +55,7 @@ class SolverILSA(object):
 
     def _solve_timestep(self, time_end: float, fracture_old: Fracture):
         fracture_new = copy.deepcopy(fracture_old)
-        fracture_new.update_time(time_end)
-        frac_volume = self.init_volume + 0.5 * self.pumping_schedule.injected_volume(0, time_end)
+        new_inj_volume = 0.5 * self.pumping_schedule.injected_volume(0, time_end)
 
         error = 1
         iteration = 0
@@ -61,8 +63,13 @@ class SolverILSA(object):
         while error > self.front_tol and iteration < self.max_iter:
             # Update front location
             fracture_new.update_front_location(front_loc_prev)
+            Vleak = 0
+            for i in range(0, fracture_new.survey_ind + 1):
+                t0 = fracture_new.exposure_time[i]
+                Vleak = Vleak + 4 * self.reservoir_prop.leakoff_coefficient * np.sqrt(time_end - t0) * self.mesh.dx[i]
 
             # Calculate tip width and restrict by half fracture volume
+            frac_volume = new_inj_volume - Vleak
             tip_width = self.asymptotic.volume(fracture_new.tip_distance()) / self.mesh.dx[fracture_new.tip_ind]
             tip_width = np.minimum(tip_width, frac_volume / (2 * self.mesh.dx[0]))
 
@@ -89,6 +96,10 @@ class SolverILSA(object):
             iteration += 1
             front_loc_prev = front_loc_new
 
+        fracture_new.update_time(time_end)
+        self.frac_volume = frac_volume
+        self.inj_volume = new_inj_volume
+        self.leak_volume = Vleak
         return fracture_new, error, iteration
 
     @staticmethod

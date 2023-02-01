@@ -13,10 +13,11 @@ class Mesh(object):
 
 
 class PumpingSchedule(object):
-    def __init__(self, duration: float, flowrate: float, pay_zone_height: float):
+    def __init__(self, schedule, flowrate, pay_zone_height: float):
         # @todo: add schedule stages
-        self.time_start = 0
-        self.time_end = duration
+        self.schedule = schedule
+        self.time_start = schedule[0]
+        self.time_end = schedule[-1]
         self.flowrate = flowrate
         self.H = pay_zone_height
 
@@ -24,7 +25,23 @@ class PumpingSchedule(object):
         return self.injected_volume(time_start, time_end) / (time_end - time_start)
 
     def injected_volume(self, time_start: float, time_end: float):
-        return (time_end - time_start) * self.flowrate / self.H
+        ind_start = 0
+        tlist = [time_start]
+        while time_start > self.schedule[ind_start + 1]:
+            ind_start = ind_start+1
+
+        ind_end = ind_start+1
+        while time_end > self.schedule[ind_end]:
+            tlist.append(self.schedule[ind_end])
+            ind_end = ind_end+1
+        tlist.append(time_end)
+
+        dV = 0
+        i = 0
+        for j in range(ind_start, ind_end):
+            dV = dV + self.flowrate[j]*(tlist[i+1]-tlist[i])
+            i = i + 1
+        return dV/self.H
 
 
 class ReservoirProperties(object):

@@ -12,10 +12,13 @@ class Fracture(object):
         self.tip_ind = 0
         self.survey_ind = 0
         self.time = 0
+        self.exposure_time = np.zeros(self.mesh.nx)
 
     def update_front_location(self, front_location: float):
         self.front_location = front_location
+        tip_ind_old = self.tip_ind
         self.tip_ind = bisect_right(self.mesh.xc + self.mesh.dx / 2, self.front_location)
+        self.exposure_time[tip_ind_old:self.tip_ind] = self.time
         self.survey_ind = self.tip_ind - 1
         if self.survey_ind < 0:
             raise Exception("Survey index is invalid. Probably the fracture length is less than element size.")

@@ -11,8 +11,10 @@ from PySide6.QtWidgets import (
     QFormLayout,
     QLineEdit,
     QGroupBox,
-    QSizePolicy
+    QSizePolicy,
+    QTableWidget
 )
+import PyQt5
 from .Spoiler import Spoiler
 
 
@@ -85,7 +87,7 @@ class InputDataWidget(QWidget):
             QLineEdit("2.0e9"),
             QLineEdit("0.3"),
             QLineEdit("5.0e6"),
-            QLineEdit("0")
+            QLineEdit("1.0e-5")
         ]
 
         # Assemble reservoir properties input form and set validator
@@ -105,28 +107,52 @@ class InputDataWidget(QWidget):
         """
         Pumping schedule input layout
         """
-        schedule_form_layout = QFormLayout()
+        self.schedule_form_layout = QVBoxLayout()
+        self.pumping_schedule_table = QTableWidget(4, 2, self)
+        self.pumping_schedule_table.setHorizontalHeaderLabels(["Duration", "Flowrate"])
 
         # Labels and input forms
         schedule_labels = [
             "Duration:",
             "Flowrate:"
         ]
-        self.pumping_schedule_input = [
-            QLineEdit("700"),
+        # self.pumping_schedule_table.horizontalHeaderItem(0).setToolTip("Column 1 ")
+        # self.schedule_form_layout.horizontalHeaderItem(1).setToolTip("Column 2 ")
+
+        # Do the resize of the columns by content
+        self.pumping_schedule_table.resizeColumnsToContents()
+
+        self.schedule_duration_input = [
+            QLineEdit("200"),
+            QLineEdit("200"),
+            QLineEdit("200"),
+            QLineEdit("200")
+        ]
+
+        self.schedule_flowrate_input = [
+            QLineEdit("0.05"),
+            QLineEdit("0.05"),
+            QLineEdit("0.05"),
             QLineEdit("0.05")
         ]
 
         # Assemble pumping schedule input form
-        for schedule_label, schedule_input in zip(schedule_labels, self.pumping_schedule_input):
-            schedule_form_layout.addRow(schedule_label, schedule_input)
-            schedule_input.setValidator(self.fp_validator)
+        for input, row in zip(self.schedule_duration_input, range(4)):
+            # schedule_form_layout.addRow(schedule_label, schedule_input)
+            input.setValidator(self.fp_validator)
+            self.pumping_schedule_table.setCellWidget(row, 0, input)
+        for input, row in zip(self.schedule_flowrate_input, range(4)):
+            # schedule_form_layout.addRow(schedule_label, schedule_input)
+            input.setValidator(self.fp_validator)
+            self.pumping_schedule_table.setCellWidget(row, 1, input)
+
+        self.schedule_form_layout.addWidget(self.pumping_schedule_table)
 
         # Put the pumping schedule layout to the group box
         schedule_group_box = QGroupBox("Pumping Schedule")
         schedule_group_box.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
-        schedule_group_box.setMinimumWidth(self.size_settings["input_bar_min_width"])
-        schedule_group_box.setLayout(schedule_form_layout)
+        # schedule_group_box.setMinimumWidth(self.size_settings["input_bar_min_width"])
+        schedule_group_box.setLayout(self.schedule_form_layout)
 
         self.layout.addWidget(schedule_group_box)
 
@@ -142,7 +168,7 @@ class InputDataWidget(QWidget):
             "Number of elements:"
         ]
         self.mesh_prop_input = [
-            QLineEdit("100.0"),
+            QLineEdit("150.0"),
             QLineEdit("200")
         ]
 
